@@ -1,0 +1,23 @@
+{
+	"config": "air",
+	"type": "lib",
+	"compilerOptions": {
+		"source-path": [
+			"src"
+		],
+		"include-sources": [
+			"src"
+		],
+		"strict": true,
+		"accessible": false,
+		"use-network": true,
+		"use-resource-bundle-metadata": true,
+		"benchmark": false,
+		"warnings": false,
+		"verbose-stacktraces": false,
+		"optimize": true,
+		"static-link-runtime-shared-libraries": true,
+		"show-unused-type-selector-warnings": true,
+		"output": "bin/P-38Core.swc"
+	}
+}

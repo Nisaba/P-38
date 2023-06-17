@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   applicationComplete="Init()"
+					   width="100%" height="100%">
+
+	
+<fx:Script> 
+	<![CDATA[ 
+		import blockstream.Message;
+		import flash.events.Event;
+		import flash.events.ErrorEvent;
+        import org.qrcode.QRCode;
+        import lang.langConfig;
+
+		private var msg:Message;
+
+		[Bindable] private var Lang:langConfig;
+
+		private function Init():void {
+			Lang = langConfig.Factory(Capabilities.language);
+		}
+
+		private function SendFile():void {
+			var f:File = new File();
+			f.addEventListener(Event.SELECT, onFileSelect);
+			f.browseForOpen(Lang.SelectionFichier);
+
+			function onFileSelect(e:Event):void {
+				f.removeEventListener(Event.SELECT, onFileSelect);
+				msg = new Message();
+				msg.addEventListener(Event.COMPLETE, onMsgComplete)
+				msg.addEventListener(ErrorEvent.ERROR, onMsgError)
+				msg.SendFile(e.currentTarget as File, nmrSatoshi.value);
+			}
+
+
+		}
+
+		private function SendMsg():void {
+			if (txtMess.text.length == 0) return;
+			
+			msg = new Message();
+			msg.addEventListener(Event.COMPLETE, onMsgComplete)
+			msg.addEventListener(ErrorEvent.ERROR, onMsgError)
+			msg.SendTxt(txtMess.text, nmrSatoshi.value)
+		}
+
+		private function onMsgComplete(e:Event):void {
+			msg.removeEventListener(Event.COMPLETE, onMsgComplete);
+			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
+			txtLightning.text = msg.LightningInvoice;
+
+			spriteQrCode.removeChildren();
+			var qr:QRCode = new QRCode();
+			qr.encode(msg.LightningInvoice);
+			spriteQrCode.addChild(new Bitmap(qr.bitmapData));  				
+		}
+
+		private function onMsgError(e:ErrorEvent):void {
+			msg.removeEventListener(Event.COMPLETE, onMsgComplete);
+			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
+			trace (Lang.ErreurMsg + e.text);
+		}		
+	]]>
+</fx:Script>
+
+<fx:Declarations>
+	<s:RadioButtonGroup id="rdTypeMessage"/>
+</fx:Declarations>
+
+
+<mx:TabNavigator id="myTab">
+	<s:NavigatorContent width="100%" height="100%" label="{Lang.NewMsg}">
+		<s:VGroup gap="20">
+			<s:HGroup>
+				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltPoint" label="{Lang.Texte}" value="txt" selected="true"/>
+				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltChemin" label="{Lang.Fichier}" value="fic"/>
+			</s:HGroup>
+
+			<s:TextInput id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
+			<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
+
+			<s:HGroup verticalAlign="middle">
+				<s:Label text="Satoshi / byte"/>
+				<s:NumericStepper id="nmrSatoshi" value="1" minimum="1"/>
+			</s:HGroup>
+
+			<s:Button label="{Lang.Envoyer}" click="SendFile()"/>
+			<s:TextArea id="txtLightning" width="500" height="300"/>
+			<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
+		</s:VGroup>
+	</s:NavigatorContent>
+
+	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
+	</s:NavigatorContent>
+
+	<s:NavigatorContent width="100%" height="100%" label="{Lang.ParamsLN}">
+	</s:NavigatorContent>
+
+</mx:TabNavigator>
+
+</s:WindowedApplication>

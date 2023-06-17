@@ -1,0 +1,72 @@
+{
+	"config": "air",
+	"type": "app",
+	"application": "src/P-38-app.xml",
+    "compilerOptions": {
+        "output": "bin-debug/P-38.swf",
+        "warnings": false,
+        "source-path": [
+        		"src"
+        	],
+        "library-path": [
+			"libs"
+			//"ane/FreSwift.ane",
+		]
+	},
+    "additionalOptions": "-locale fr_FR",
+    "airOptions": {
+		"output": "bin-release/P-38.air",
+        "extdir": [
+      		"libs"
+      	],
+          "signingOptions": {
+           /* "debug": {*/
+                "storetype": "pkcs12",
+                "keystore": "cert/nisaba3.pfx"  //password : 123456
+            /*},
+            "release" : {
+                "storetype": "Windows-MY",
+                "alias": "NISABA SOLUTIONS LIMITED"*/
+           // }
+          },
+          "files": [
+            {
+                "file": "src/img/ico16.png",
+                "path": "ico16.png"
+            },
+            {
+                "file": "src/img/ico32.png",
+                "path": "ico32.png"
+            },
+            {
+                "file": "src/img/ico36.png",
+                "path": "ico36.png"
+            },
+            {
+                "file": "src/img/ico48.png",
+                "path": "ico48.png"
+            },              
+            {
+                "file": "src/img/ico57.png",
+                "path": "ico57.png"
+            },
+            {
+                "file": "src/img/ico72.png",
+                "path": "ico72.png"
+            },
+            {
+                "file": "src/img/ico114.png",
+                "path": "ico114.png"
+            },
+            {
+                "file": "src/img/ico128.png",
+                "path": "ico128.png"
+            }
+        ]
+
+	},
+	"files":
+	[
+		"src/P38.mxml"
+	]
+}

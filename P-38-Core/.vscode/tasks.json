@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "actionscript",
+			"debug": false,
+			"group": "build",
+			"problemMatcher": [],
+			"label": "ActionScript: compile release - asconfig.json"
+		}
+	]
+}
