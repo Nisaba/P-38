@@ -17,6 +17,7 @@ package blockstream
 	import flash.utils.ByteArray;
 	import flash.net.URLLoaderDataFormat;
 	import models.UploadPostHelper;
+	//import com.adobe.serialization.json.JSON;
 
 
     public class Message extends EventDispatcher {
@@ -53,11 +54,15 @@ package blockstream
 		public var LightningInvoice:String;
 		public var mSatoshi:uint;
 		public var errMsg:String;
+		public var errCode:int;
 
-        public function SendTxt(pMessage:String, pBid:int):void {
+        public function SendTxt(pMessage:String, pBid:uint):void {
+			mSatoshi = pBid * pMessage.length;
+			if (mSatoshi < 1000) mSatoshi = 1000;
+
 			Type = TYPE_MSG_TXT;
             var formVars:URLVariables = new URLVariables();
-            formVars.bid = pBid.toString();
+            formVars.bid = mSatoshi.toString();
             formVars.message = pMessage;
 			
 			var req:URLRequest = new URLRequest(URL_BASE + "order");
@@ -65,9 +70,7 @@ package blockstream
 			req.data = formVars;
             req.contentType = "application/x-www-form-urlencoded";
 
-			myLdr = new URLLoader();
-			AddErrorListeners();
-			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
+			AddListeners();
 			myLdr.load(req);
 
         }
@@ -82,6 +85,9 @@ package blockstream
 			fs.readBytes(ba);
 			fs.close();
 
+			mSatoshi = pBid * ba.length;
+			if (mSatoshi < 1000) mSatoshi = 1000;
+
             /*var formVars:URLVariables = new URLVariables();
             formVars.bid = pBid.toString();
 			formVars.file = ba;*/
@@ -91,11 +97,9 @@ package blockstream
 			var req:URLRequest = new URLRequest(URL_BASE + "order");
 			req.method = URLRequestMethod.POST;
             req.contentType = "multipart/form-data; boundary=" + UploadPostHelper.getBoundary();
-			req.data = UploadPostHelper.getPostData(pFile.name, ba, {bid: pBid.toString()} );
+			req.data = UploadPostHelper.getPostData(pFile.name, ba, {bid: mSatoshi.toString()} );
 
-			myLdr = new URLLoader();
-			AddErrorListeners();
-			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
+			AddListeners();
 			myLdr.dataFormat = URLLoaderDataFormat.BINARY;
 			myLdr.load( req );
 		}
@@ -121,8 +125,16 @@ package blockstream
 		
 		private function onErrorUpload(e:IOErrorEvent) : void {
 			removeListeners();
-			trace ("onErrorUpload() : " + e.text);		
-			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, e.text));	
+			JsonReponse = JSON.parse((e.target as URLLoader).data);
+			if (JsonReponse == null) {
+				trace ("onErrorUpload() : " + e.text);	
+				errCode = 0;	
+				dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, e.text));	
+			} else {
+				errMsg = JsonReponse.errors[0].detail;
+				errCode = JsonReponse.errors[0].code;
+				dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, errMsg));	
+			}
 		}
 		
 		private function onSecurityErrorUpload(e:SecurityErrorEvent) : void {
@@ -135,7 +147,9 @@ package blockstream
 			trace ("onStatus() : " + e.status);			
 		}
 		
-		private function AddErrorListeners(): void {
+		private function AddListeners(): void {
+			myLdr = new URLLoader();
+			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
 			myLdr.addEventListener(ErrorEvent.ERROR, onError);
 			myLdr.addEventListener(HTTPStatusEvent.HTTP_STATUS, onStatus);
 			myLdr.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorUpload);

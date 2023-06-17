@@ -8,6 +8,9 @@
 		"include-sources": [
 			"src"
 		],
+        "library-path": [
+			"libs"
+		],
 		"strict": true,
 		"accessible": false,
 		"use-network": true,

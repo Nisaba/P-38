@@ -61,7 +61,12 @@
 		private function onMsgError(e:ErrorEvent):void {
 			msg.removeEventListener(Event.COMPLETE, onMsgComplete);
 			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
-			trace (Lang.ErreurMsg + e.text);
+			if (msg.errCode == 0) {
+				trace (Lang.ErreurMsg + e.text);
+			} else {
+				trace (Lang.ErreurMsg + msg.errCode.toString() + " - " + Lang.ErrDescription[msg.errCode]);
+				trace (msg.errMsg);
+			}
 		}		
 	]]>
 </fx:Script>
@@ -83,11 +88,11 @@
 			<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
 
 			<s:HGroup verticalAlign="middle">
-				<s:Label text="Satoshi / byte"/>
+				<s:Label text="mSatoshi / byte"/>
 				<s:NumericStepper id="nmrSatoshi" value="1" minimum="1"/>
 			</s:HGroup>
 
-			<s:Button label="{Lang.Envoyer}" click="SendFile()"/>
+			<s:Button label="{Lang.Envoyer}" click="if(rdTypeMessage.selectedValue == 'txt') SendMsg() else SendFile();"/>
 			<s:TextArea id="txtLightning" width="500" height="300"/>
 			<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
 		</s:VGroup>

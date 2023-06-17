@@ -15,6 +15,8 @@ package lang {
 		public var Texte:String;
 		public var Fichier:String;
 		public var Envoyer:String;
+
+		public var ErrDescription:Object = new Object();
 		
 
 		public function langConfig() {
