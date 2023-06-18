@@ -17,6 +17,8 @@ package blockstream
 	import flash.utils.ByteArray;
 	import flash.net.URLLoaderDataFormat;
 	import models.UploadPostHelper;
+	import flash.net.URLRequestHeader;
+	import blockstream.PrivateKey;
 	//import com.adobe.serialization.json.JSON;
 
 
@@ -53,8 +55,10 @@ package blockstream
 		public var MsgToken:String;
 		public var LightningInvoice:String;
 		public var mSatoshi:uint;
-		public var errMsg:String;
-		public var errCode:int;
+		public var ErrMsg:String;
+		public var ErrCode:int;
+		public var Status:String;
+		public var DateT:Date;
 
         public function SendTxt(pMessage:String, pBid:uint):void {
 			mSatoshi = pBid * pMessage.length;
@@ -71,8 +75,13 @@ package blockstream
             req.contentType = "application/x-www-form-urlencoded";
 
 			AddListeners();
+			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
 			myLdr.load(req);
 
+        }
+
+        public function SendTxtCrypt(pMessage:String, pBid:uint, pKey:String):void {
+			SendTxt(PrivateKey.CryptStr(pMessage, pKey), pBid);
         }
 
 
@@ -88,10 +97,6 @@ package blockstream
 			mSatoshi = pBid * ba.length;
 			if (mSatoshi < 1000) mSatoshi = 1000;
 
-            /*var formVars:URLVariables = new URLVariables();
-            formVars.bid = pBid.toString();
-			formVars.file = ba;*/
-
 			//https://stackoverflow.com/questions/12245682/upload-file-to-server-in-as3
 			
 			var req:URLRequest = new URLRequest(URL_BASE + "order");
@@ -100,11 +105,11 @@ package blockstream
 			req.data = UploadPostHelper.getPostData(pFile.name, ba, {bid: mSatoshi.toString()} );
 
 			AddListeners();
+			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
 			myLdr.dataFormat = URLLoaderDataFormat.BINARY;
 			myLdr.load( req );
 		}
 
-            
         private function onSendComplete(e:Event):void {
             removeListeners();
             JsonReponse = JSON.parse(e.target.data);
@@ -113,8 +118,29 @@ package blockstream
 			MsgID = JsonReponse.uuid;
 			LightningInvoice = JsonReponse.lightning_invoice.payreq;
 			mSatoshi = JsonReponse.lightning_invoice.msatoshi as uint;
+			DateT = new Date();
+			Status = "pending";
 			dispatchEvent(new Event(Event.COMPLETE));
         }
+
+        public function Refresh():void {
+			var req:URLRequest = new URLRequest(URL_BASE + "order/" + MsgID);
+			var headers:Array = new Array();
+			// https://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestHeader.html
+			headers.push( new URLRequestHeader("X-Auth-Token", MsgToken));
+			req.requestHeaders.push(headers);
+			req.method = URLRequestMethod.GET;
+
+			AddListeners();
+			myLdr.addEventListener(Event.COMPLETE, onRefreshComplete);
+			myLdr.load(req);
+
+		}
+
+        private function onRefreshComplete(e:Event):void {
+            removeListeners();
+			trace (e.target.data);
+		}
 
 		private function onError(e:ErrorEvent) : void {
 			removeListeners();
@@ -128,12 +154,12 @@ package blockstream
 			JsonReponse = JSON.parse((e.target as URLLoader).data);
 			if (JsonReponse == null) {
 				trace ("onErrorUpload() : " + e.text);	
-				errCode = 0;	
+				ErrCode = 0;	
 				dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, e.text));	
 			} else {
-				errMsg = JsonReponse.errors[0].detail;
-				errCode = JsonReponse.errors[0].code;
-				dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, errMsg));	
+				ErrMsg = JsonReponse.errors[0].detail;
+				ErrCode = JsonReponse.errors[0].code;
+				dispatchEvent(new ErrorEvent(ErrorEvent.ERROR, false, false, ErrMsg));	
 			}
 		}
 		
@@ -149,7 +175,6 @@ package blockstream
 		
 		private function AddListeners(): void {
 			myLdr = new URLLoader();
-			myLdr.addEventListener(Event.COMPLETE, onSendComplete);
 			myLdr.addEventListener(ErrorEvent.ERROR, onError);
 			myLdr.addEventListener(HTTPStatusEvent.HTTP_STATUS, onStatus);
 			myLdr.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorUpload);
@@ -158,6 +183,7 @@ package blockstream
 				
 		private function removeListeners(): void {
 			myLdr.removeEventListener(Event.COMPLETE, onSendComplete);
+			myLdr.removeEventListener(Event.COMPLETE, onRefreshComplete);
 			myLdr.removeEventListener(ErrorEvent.ERROR, onError);
 			myLdr.removeEventListener(HTTPStatusEvent.HTTP_STATUS, onStatus);
 			myLdr.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityErrorUpload);

@@ -15,6 +15,9 @@ package lang {
 			Texte = "Texte";
 			Fichier = "Fichier";
 			Envoyer = "Envoyer";
+			ClesPrivees = "Clés Privées";
+			SignerMessage = "Signer Message";
+			Cle = "Clé :";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";
@@ -28,7 +31,7 @@ package lang {
  			ErrDescription[Message.ERR_MESSAGE_FILE_TOO_LARGE] = "Fichier trop grand";
  			ErrDescription[Message.ERR_ORDER_BUMP_ERROR] = "Erreur lors de l'augmentation de l'offre";
  			ErrDescription[Message.ERR_ORDER_CANCELLATION_ERROR] = "Erreur lors de l'annulation";
- 			ErrDescription[Message.ERR_CHANNELS_EQUALITY] = "Canaux équivallents";
+ 			ErrDescription[Message.ERR_CHANNELS_EQUALITY] = "Canaux équivalents";
  			ErrDescription[Message.ERR_MESSAGE_TOO_LONG] = "Message trop long";
  			ErrDescription[Message.ERR_MESSAGE_MISSING] = "Message manquant";
  			ErrDescription[Message.ERR_ORDER_CHANNEL_UNAUTHORIZED_OP] = "Opération non autorisée";

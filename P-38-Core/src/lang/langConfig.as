@@ -15,6 +15,9 @@ package lang {
 		public var Texte:String;
 		public var Fichier:String;
 		public var Envoyer:String;
+		public var ClesPrivees:String;
+		public var SignerMessage:String;
+		public var Cle:String;
 
 		public var ErrDescription:Object = new Object();
 		

@@ -13,13 +13,19 @@
 		import flash.events.ErrorEvent;
         import org.qrcode.QRCode;
         import lang.langConfig;
+        import utils.myAppli;
+        import blockstream.PrivateKey;
 
 		private var msg:Message;
+		[Bindable] private var myMessages:Vector.<Message>;
+		[Bindable] private var myKeys:Vector.<PrivateKey>;
 
 		[Bindable] private var Lang:langConfig;
 
 		private function Init():void {
 			Lang = langConfig.Factory(Capabilities.language);
+			myMessages = myAppli.Messages;
+			myKeys = myAppli.PrivateKeys;
 		}
 
 		private function SendFile():void {
@@ -30,8 +36,8 @@
 			function onFileSelect(e:Event):void {
 				f.removeEventListener(Event.SELECT, onFileSelect);
 				msg = new Message();
-				msg.addEventListener(Event.COMPLETE, onMsgComplete)
-				msg.addEventListener(ErrorEvent.ERROR, onMsgError)
+				msg.addEventListener(Event.COMPLETE, onMsgComplete);
+				msg.addEventListener(ErrorEvent.ERROR, onMsgError);
 				msg.SendFile(e.currentTarget as File, nmrSatoshi.value);
 			}
 
@@ -42,9 +48,14 @@
 			if (txtMess.text.length == 0) return;
 			
 			msg = new Message();
-			msg.addEventListener(Event.COMPLETE, onMsgComplete)
-			msg.addEventListener(ErrorEvent.ERROR, onMsgError)
-			msg.SendTxt(txtMess.text, nmrSatoshi.value)
+			msg.addEventListener(Event.COMPLETE, onMsgComplete);
+			msg.addEventListener(ErrorEvent.ERROR, onMsgError);
+			if (chkSign.selected) {
+				var myKey:PrivateKey = (cmbKeys.selectedItem as PrivateKey);
+				msg.SendTxtCrypt(txtMess.text, nmrSatoshi.value, myKey.Key);
+			} else {
+				msg.SendTxt(txtMess.text, nmrSatoshi.value);
+			}
 		}
 
 		private function onMsgComplete(e:Event):void {
@@ -55,17 +66,21 @@
 			spriteQrCode.removeChildren();
 			var qr:QRCode = new QRCode();
 			qr.encode(msg.LightningInvoice);
-			spriteQrCode.addChild(new Bitmap(qr.bitmapData));  				
+			spriteQrCode.addChild(new Bitmap(qr.bitmapData));  	
+
+			myMessages.push(msg);
+			myAppli.Messages = myMessages;
+
 		}
 
 		private function onMsgError(e:ErrorEvent):void {
 			msg.removeEventListener(Event.COMPLETE, onMsgComplete);
 			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
-			if (msg.errCode == 0) {
+			if (msg.ErrCode == 0) {
 				trace (Lang.ErreurMsg + e.text);
 			} else {
-				trace (Lang.ErreurMsg + msg.errCode.toString() + " - " + Lang.ErrDescription[msg.errCode]);
-				trace (msg.errMsg);
+				trace (Lang.ErreurMsg + msg.ErrCode.toString() + " - " + Lang.ErrDescription[msg.ErrCode]);
+				trace (msg.ErrMsg);
 			}
 		}		
 	]]>
@@ -83,6 +98,12 @@
 				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltPoint" label="{Lang.Texte}" value="txt" selected="true"/>
 				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltChemin" label="{Lang.Fichier}" value="fic"/>
 			</s:HGroup>
+			<s:HGroup verticalAlign="middle">
+				<s:CheckBox id="chkSign" label="{Lang.SignerMessage}" enabled="{cmbKeys.selectedItem != null}"/>
+				<s:Spacer width="20"/>
+				<s:Label text="{Lang.Cle}"/>
+				<s:ComboBox id="cmbKeys" dataProvider="{myKeys}" labelField="Desc"/>
+			</s:HGroup>
 
 			<s:TextInput id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
 			<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
@@ -92,13 +113,19 @@
 				<s:NumericStepper id="nmrSatoshi" value="1" minimum="1"/>
 			</s:HGroup>
 
-			<s:Button label="{Lang.Envoyer}" click="if(rdTypeMessage.selectedValue == 'txt') SendMsg() else SendFile();"/>
+			<s:HGroup>
+				<s:Button label="Refresh" click="msg.Refresh();"/>
+				<s:Button label="{Lang.Envoyer}" click="if(rdTypeMessage.selectedValue == 'txt') SendMsg() else SendFile();"/>
+			</s:HGroup>
 			<s:TextArea id="txtLightning" width="500" height="300"/>
 			<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
 		</s:VGroup>
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
+	</s:NavigatorContent>
+
+	<s:NavigatorContent width="100%" height="100%" label="{Lang.ClesPrivees}">
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ParamsLN}">
