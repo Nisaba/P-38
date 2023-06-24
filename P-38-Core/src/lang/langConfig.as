@@ -18,6 +18,15 @@ package lang {
 		public var ClesPrivees:String;
 		public var SignerMessage:String;
 		public var Cle:String;
+		public var Description:String;
+		public var ID:String;
+		public var Token:String;
+		public var Prix:String;
+		public var Statut:String;
+		public var Date:String;
+		public var Type:String;
+		public var Crypte:String;
+		public var Contenu:String;
 
 		public var ErrDescription:Object = new Object();
 		

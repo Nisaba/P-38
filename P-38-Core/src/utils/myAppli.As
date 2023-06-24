@@ -15,11 +15,16 @@ package utils {
 			} else {
                 var  vMessages:Vector.<Message> = new Vector.<Message>;
 				for each(var obj:Object in so.data.Messages) {
-                    var msg:Message = new Message();
-                    for (var prop:String in obj) {
-                        msg[prop] = obj[prop]
-                    }
-                    vMessages.push(msg);
+					try {
+						var msg:Message = new Message();
+						for (var prop:String in obj) {
+							msg[prop] = obj[prop]
+						}
+                    	vMessages.push(msg);						
+					} catch (e:Error)	{
+						trace (e.Message);
+					}
+
     			}
                 return vMessages;
             }

@@ -18,6 +18,15 @@ package lang {
 			ClesPrivees = "Clés Privées";
 			SignerMessage = "Signer Message";
 			Cle = "Clé :";
+			Description = "Description";
+			ID = "Identifiant";
+			Token = "Jeton";
+			Prix = "Prix";
+			Statut = "Statut";
+			Date = "Date";
+			Type = "Type";
+			Crypte = "Crypté";
+			Contenu = "Contenu";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";

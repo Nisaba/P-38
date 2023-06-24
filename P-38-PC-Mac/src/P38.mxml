@@ -15,10 +15,13 @@
         import lang.langConfig;
         import utils.myAppli;
         import blockstream.PrivateKey;
+        import org.apache.flex.collections.VectorCollection;
 
 		private var msg:Message;
 		[Bindable] private var myMessages:Vector.<Message>;
-		[Bindable] private var myKeys:Vector.<PrivateKey>;
+		
+		private var myKeys:Vector.<PrivateKey>;
+		[Bindable] private var myKeysCollection:VectorCollection;
 
 		[Bindable] private var Lang:langConfig;
 
@@ -26,6 +29,7 @@
 			Lang = langConfig.Factory(Capabilities.language);
 			myMessages = myAppli.Messages;
 			myKeys = myAppli.PrivateKeys;
+			myKeysCollection = new VectorCollection(myKeys);
 		}
 
 		private function SendFile():void {
@@ -102,7 +106,7 @@
 				<s:CheckBox id="chkSign" label="{Lang.SignerMessage}" enabled="{cmbKeys.selectedItem != null}"/>
 				<s:Spacer width="20"/>
 				<s:Label text="{Lang.Cle}"/>
-				<s:ComboBox id="cmbKeys" dataProvider="{myKeys}" labelField="Desc"/>
+				<s:ComboBox id="cmbKeys" dataProvider="{myKeysCollection}" labelField="Desc"/>
 			</s:HGroup>
 
 			<s:TextInput id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
@@ -123,9 +127,33 @@
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
+		<s:DataGrid alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="100%" height="180" fontSize="10"
+				added="{myAppli.PrivateKeys = myKeys}" updateComplete="{myAppli.PrivateKeys = myKeys}">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="DateT" headerText="{Lang.Date}" editable="false"/>
+					<s:GridColumn dataField="ID" headerText="{Lang.ID}" editable="false"/>
+					<s:GridColumn dataField="Token" headerText="{Lang.Description}" editable="false"/>
+					<s:GridColumn dataField="Type" headerText="{Lang.Type}" editable="false"/>
+					<s:GridColumn dataField="mSatoshi" headerText="{Lang.Cle}" editable="false"/>
+					<s:GridColumn dataField="Status" headerText="{Lang.Description}" editable="false"/>
+					<s:GridColumn dataField="IsCrypted" headerText="{Lang.Crypte}" editable="false"/>
+					<s:GridColumn dataField="Content" headerText="{Lang.Contenu}" editable="false"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>		
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ClesPrivees}">
+		<s:DataGrid alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="250" height="180" fontSize="10"
+				added="{myAppli.PrivateKeys = myKeys}" updateComplete="{myAppli.PrivateKeys = myKeys}">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="Desc" headerText="{Lang.Description}" editable="true"/>
+					<s:GridColumn dataField="Key" headerText="{Lang.Cle}" editable="false"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>		
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ParamsLN}">

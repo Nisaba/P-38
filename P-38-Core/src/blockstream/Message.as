@@ -59,9 +59,17 @@ package blockstream
 		public var ErrCode:int;
 		public var Status:String;
 		public var DateT:Date;
+		public var CryptKey:String;
+		public var Content:String;
+
+		public function IsCrypted():Boolean {
+			return (CryptKey != "");
+		}
 
         public function SendTxt(pMessage:String, pBid:uint):void {
 			mSatoshi = pBid * pMessage.length;
+			Content = pMessage;
+
 			if (mSatoshi < 1000) mSatoshi = 1000;
 
 			Type = TYPE_MSG_TXT;
@@ -81,12 +89,15 @@ package blockstream
         }
 
         public function SendTxtCrypt(pMessage:String, pBid:uint, pKey:String):void {
+			CryptKey = pKey;
 			SendTxt(PrivateKey.CryptStr(pMessage, pKey), pBid);
+			Content = pMessage;
         }
 
 
 		public function SendFile(pFile:File, pBid:int):void {
 			Type = TYPE_MSG_FILE;	
+			Content = pFile.name;
 
 			var fs:FileStream = new FileStream();
 			fs.open(pFile, FileMode.READ);
