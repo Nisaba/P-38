@@ -16,9 +16,11 @@
         import utils.myAppli;
         import blockstream.PrivateKey;
         import org.apache.flex.collections.VectorCollection;
+        import spark.components.Alert;
 
 		private var msg:Message;
-		[Bindable] private var myMessages:Vector.<Message>;
+		private var myMessages:Vector.<Message>;
+		[Bindable] private var myMessagesCollection:VectorCollection;
 		
 		private var myKeys:Vector.<PrivateKey>;
 		[Bindable] private var myKeysCollection:VectorCollection;
@@ -28,6 +30,7 @@
 		private function Init():void {
 			Lang = langConfig.Factory(Capabilities.language);
 			myMessages = myAppli.Messages;
+			myMessagesCollection = new VectorCollection(myMessages);
 			myKeys = myAppli.PrivateKeys;
 			myKeysCollection = new VectorCollection(myKeys);
 		}
@@ -73,6 +76,7 @@
 			spriteQrCode.addChild(new Bitmap(qr.bitmapData));  	
 
 			myMessages.push(msg);
+			myMessagesCollection = new VectorCollection(myMessages);
 			myAppli.Messages = myMessages;
 
 		}
@@ -86,7 +90,38 @@
 				trace (Lang.ErreurMsg + msg.ErrCode.toString() + " - " + Lang.ErrDescription[msg.ErrCode]);
 				trace (msg.ErrMsg);
 			}
-		}		
+		}
+
+		private function AddKey():void {
+			var newKey:PrivateKey = new PrivateKey()
+			newKey.Desc = txtKeyDesc.text;
+			newKey.Key = txtKey.text;
+
+			myKeys.push(newKey);
+			myKeysCollection = new VectorCollection(myKeys);
+			myAppli.PrivateKeys = myKeys;
+
+			txtKeyDesc.text = "";
+			txtKey.text = "";
+		}
+
+		private function SupprKey():void {
+			myKeys.removeAt(dgKeys.selectedIndex);
+			myKeysCollection = new VectorCollection(myKeys);
+			myAppli.PrivateKeys = myKeys;
+		}
+
+		private function RefreshMsg():void {
+			myMessages[dgMsg.selectedIndex].addEventListener(Event.COMPLETE, onMsgRefresh);
+			myMessages[dgMsg.selectedIndex].Refresh();
+
+			function onMsgRefresh():void {
+				myMessages[dgMsg.selectedIndex].removeEventListener(Event.COMPLETE, onMsgRefresh);
+				myMessagesCollection = new VectorCollection(myMessages);
+				myAppli.Messages = myMessages;
+			}
+		}
+		
 	]]>
 </fx:Script>
 
@@ -127,33 +162,46 @@
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
-		<s:DataGrid alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="100%" height="180" fontSize="10"
-				added="{myAppli.PrivateKeys = myKeys}" updateComplete="{myAppli.PrivateKeys = myKeys}">
-			<s:columns>
-				<s:ArrayList>
-					<s:GridColumn dataField="DateT" headerText="{Lang.Date}" editable="false"/>
-					<s:GridColumn dataField="ID" headerText="{Lang.ID}" editable="false"/>
-					<s:GridColumn dataField="Token" headerText="{Lang.Description}" editable="false"/>
-					<s:GridColumn dataField="Type" headerText="{Lang.Type}" editable="false"/>
-					<s:GridColumn dataField="mSatoshi" headerText="{Lang.Cle}" editable="false"/>
-					<s:GridColumn dataField="Status" headerText="{Lang.Description}" editable="false"/>
-					<s:GridColumn dataField="IsCrypted" headerText="{Lang.Crypte}" editable="false"/>
-					<s:GridColumn dataField="Content" headerText="{Lang.Contenu}" editable="false"/>
-				</s:ArrayList>
-			</s:columns>
-		</s:DataGrid>		
+		<s:VGroup>
+			<s:DataGrid id="dgMsg" editable="false" dataProvider="{myMessagesCollection}" alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="100%" height="180" fontSize="10">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="DateT" headerText="{Lang.Date}" editable="false"/>
+						<s:GridColumn dataField="ID" headerText="{Lang.ID}" editable="false"/>
+						<s:GridColumn dataField="Token" headerText="{Lang.Token}" editable="false"/>
+						<s:GridColumn dataField="Type" headerText="{Lang.Type}" editable="false"/>
+						<s:GridColumn dataField="mSatoshi" headerText="{Lang.Cle}" editable="false"/>
+						<s:GridColumn dataField="Status" headerText="{Lang.Statut}" editable="false"/>
+						<s:GridColumn dataField="IsCrypted" headerText="{Lang.Crypte}" editable="false"/>
+						<s:GridColumn dataField="Content" headerText="{Lang.Contenu}" editable="false"/>
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>		
+			<s:Button label="{Lang.Rafraichir}" click="RefreshMsg()" enabled="{dgMsg.selectedItem != null}"/>
+		</s:VGroup>
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ClesPrivees}">
-		<s:DataGrid alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="250" height="180" fontSize="10"
-				added="{myAppli.PrivateKeys = myKeys}" updateComplete="{myAppli.PrivateKeys = myKeys}">
-			<s:columns>
-				<s:ArrayList>
-					<s:GridColumn dataField="Desc" headerText="{Lang.Description}" editable="true"/>
-					<s:GridColumn dataField="Key" headerText="{Lang.Cle}" editable="false"/>
-				</s:ArrayList>
-			</s:columns>
-		</s:DataGrid>		
+		<s:VGroup>
+			<s:DataGrid id="dgKeys" editable="false" dataProvider="{myKeysCollection}" alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="250" height="180" fontSize="10">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="Desc" headerText="{Lang.Description}"/>
+						<s:GridColumn dataField="Key" headerText="{Lang.Cle}"/>
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+			<s:HGroup>
+				<s:Label text="{Lang.Description}"/>
+				<s:TextInput id="txtKeyDesc"/>
+			</s:HGroup>
+			<s:HGroup>
+				<s:Label text="{Lang.Cle}"/>
+				<s:TextInput id="txtKey"/>
+			</s:HGroup>
+			<s:Button label="{Lang.Ajouter}" click="AddKey()" enabled="{!(txtKeyDesc.text.replace(' ', '') == '' || txtKey.text.replace(' ', '') == '')}"/>
+			<s:Button label="{Lang.Supprimer}" click="SupprKey()" enabled="{dgKeys.selectedItem != null}"/>
+		</s:VGroup>		
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ParamsLN}">

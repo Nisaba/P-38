@@ -27,6 +27,10 @@ package lang {
 		public var Type:String;
 		public var Crypte:String;
 		public var Contenu:String;
+		public var Ajouter:String;
+		public var InfosIncorrectes:String;
+		public var Supprimer:String
+		public var Rafraichir:String;
 
 		public var ErrDescription:Object = new Object();
 		

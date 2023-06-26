@@ -8,7 +8,7 @@
             "type": "swf",
             "request": "launch",
             "name": "Launch SWF",
- "preLaunchTask": "Adobe AIR: package desktop debug (shared runtime) - asconfig.json"
+ //"preLaunchTask": "Adobe AIR: package desktop debug (shared runtime) - asconfig.json"
             }/*,
         {
             "type": "swf",

@@ -62,14 +62,14 @@ package blockstream
 		public var CryptKey:String;
 		public var Content:String;
 
-		public function IsCrypted():Boolean {
-			return (CryptKey != "");
+		public function get IsCrypted():Boolean {
+			return (CryptKey != null && CryptKey != "");
 		}
 
         public function SendTxt(pMessage:String, pBid:uint):void {
 			mSatoshi = pBid * pMessage.length;
 			Content = pMessage;
-
+			trace (pMessage);
 			if (mSatoshi < 1000) mSatoshi = 1000;
 
 			Type = TYPE_MSG_TXT;
@@ -151,6 +151,7 @@ package blockstream
         private function onRefreshComplete(e:Event):void {
             removeListeners();
 			trace (e.target.data);
+			dispatchEvent(new Event(Event.COMPLETE));
 		}
 
 		private function onError(e:ErrorEvent) : void {

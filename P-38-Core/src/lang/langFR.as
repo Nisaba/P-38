@@ -27,6 +27,10 @@ package lang {
 			Type = "Type";
 			Crypte = "Crypté";
 			Contenu = "Contenu";
+			Ajouter = "Ajouter";
+			InfosIncorrectes = "Informations incorrectes";
+			Supprimer = "Supprimer";
+			Rafraichir = "Rafraichir";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";
