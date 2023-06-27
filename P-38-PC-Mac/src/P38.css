@@ -7,7 +7,6 @@ global {
   font-size: 14;
 }
 
-
 s|Button {
   chrome-color: #153764;
   color: #ffffff;
@@ -34,7 +33,11 @@ s|NumericStepper {
 }
 
 s|RadioButton {
-  symbol-color: #153764;
+  symbol-color: #6693a8;
+}
+
+s|CheckBox {
+  symbol-color: #6693a8;
 }
 
 .StyleTab {
