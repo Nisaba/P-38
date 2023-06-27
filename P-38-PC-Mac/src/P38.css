@@ -1,0 +1,51 @@
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+global {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14;
+}
+
+
+s|Button {
+  chrome-color: #153764;
+  color: #ffffff;
+  font-weight: bold;
+  corner-radius: 6;
+}
+
+s|Button:hover,
+s|Button:focus { 
+  chrome-color: #244c81;
+}
+
+s|Button:disabled { 
+  chrome-color: #7c7b7b;
+  color: #000000;
+}
+
+s|ComboBox {
+  symbol-color:#ffffff;
+}
+
+s|NumericStepper {
+  symbol-color:#ffffff;
+}
+
+s|RadioButton {
+  symbol-color: #153764;
+}
+
+.StyleTab {
+  chrome-color: #6693a8;
+  focus-color: #7c83e4;
+  font-weight: bold;
+}
+
+s|DataGrid {
+  chrome-color: #ad834b;
+  alternating-row-colors: #a8c5c5, #cccaca;
+  color: #000000;
+  font-weight: bold;
+}

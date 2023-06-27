@@ -17,7 +17,7 @@ package lang {
 			Envoyer = "Envoyer";
 			ClesPrivees = "Clés Privées";
 			SignerMessage = "Signer Message";
-			Cle = "Clé :";
+			Cle = "Clé";
 			Description = "Description";
 			ID = "Identifiant";
 			Token = "Jeton";

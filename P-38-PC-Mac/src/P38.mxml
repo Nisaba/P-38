@@ -5,6 +5,8 @@
 					   applicationComplete="Init()"
 					   width="100%" height="100%">
 
+<fx:Style source="P38.css"/>
+
 	
 <fx:Script> 
 	<![CDATA[ 
@@ -33,6 +35,7 @@
 			myMessagesCollection = new VectorCollection(myMessages);
 			myKeys = myAppli.PrivateKeys;
 			myKeysCollection = new VectorCollection(myKeys);
+			nativeWindow.maximize();
 		}
 
 		private function SendFile():void {
@@ -130,9 +133,9 @@
 </fx:Declarations>
 
 
-<mx:TabNavigator id="myTab">
+<mx:TabNavigator id="myTab" tabStyleName="StyleTab" width="100%" height="100%"> 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.NewMsg}">
-		<s:VGroup gap="20">
+		<s:VGroup gap="20" width="100%" height="100%" padding="30">
 			<s:HGroup>
 				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltPoint" label="{Lang.Texte}" value="txt" selected="true"/>
 				<s:RadioButton group="{rdTypeMessage}" id="rdDroneEltChemin" label="{Lang.Fichier}" value="fic"/>
@@ -141,11 +144,11 @@
 				<s:CheckBox id="chkSign" label="{Lang.SignerMessage}" enabled="{cmbKeys.selectedItem != null}"/>
 				<s:Spacer width="20"/>
 				<s:Label text="{Lang.Cle}"/>
-				<s:ComboBox id="cmbKeys" dataProvider="{myKeysCollection}" labelField="Desc"/>
+				<s:ComboBox id="cmbKeys" dataProvider="{myKeysCollection}" labelField="Desc" restrict="|"/>
 			</s:HGroup>
 
 			<s:TextInput id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
-			<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
+			<s:Button  label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
 
 			<s:HGroup verticalAlign="middle">
 				<s:Label text="mSatoshi / byte"/>
@@ -162,18 +165,26 @@
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
-		<s:VGroup>
-			<s:DataGrid id="dgMsg" editable="false" dataProvider="{myMessagesCollection}" alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="100%" height="180" fontSize="10">
+		<s:VGroup gap="20" width="100%" height="100%" padding="30">
+			<s:DataGrid id="dgMsg" editable="false" dataProvider="{myMessagesCollection}" verticalScrollPolicy="auto" width="100%" height="250" fontSize="10">
 				<s:columns>
 					<s:ArrayList>
-						<s:GridColumn dataField="DateT" headerText="{Lang.Date}" editable="false"/>
-						<s:GridColumn dataField="ID" headerText="{Lang.ID}" editable="false"/>
-						<s:GridColumn dataField="Token" headerText="{Lang.Token}" editable="false"/>
-						<s:GridColumn dataField="Type" headerText="{Lang.Type}" editable="false"/>
-						<s:GridColumn dataField="mSatoshi" headerText="{Lang.Cle}" editable="false"/>
-						<s:GridColumn dataField="Status" headerText="{Lang.Statut}" editable="false"/>
-						<s:GridColumn dataField="IsCrypted" headerText="{Lang.Crypte}" editable="false"/>
-						<s:GridColumn dataField="Content" headerText="{Lang.Contenu}" editable="false"/>
+						<s:GridColumn dataField="DateT" headerText="{Lang.Date}"/>
+						<s:GridColumn dataField="MsgID" headerText="{Lang.ID}"/>
+						<s:GridColumn dataField="MsgToken" headerText="{Lang.Token}"/>
+						<s:GridColumn dataField="Type" headerText="{Lang.Type}"/>
+						<s:GridColumn dataField="mSatoshi" headerText="{Lang.Prix}"/>
+						<s:GridColumn dataField="Status" headerText="{Lang.Statut}"/>
+						<s:GridColumn dataField="IsCrypted" headerText="{Lang.Crypte}">
+							<s:itemRenderer>
+								<fx:Component>
+									<s:GridItemRenderer>
+										<s:CheckBox left="30" selected="{data.IsCrypted}" enabled="false"/>
+									</s:GridItemRenderer>
+								</fx:Component> 
+							</s:itemRenderer>
+						</s:GridColumn>
+						<s:GridColumn dataField="Content" headerText="{Lang.Contenu}"/>
 					</s:ArrayList>
 				</s:columns>
 			</s:DataGrid>		
@@ -182,8 +193,8 @@
 	</s:NavigatorContent>
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ClesPrivees}">
-		<s:VGroup>
-			<s:DataGrid id="dgKeys" editable="false" dataProvider="{myKeysCollection}" alternatingRowColors="[#FFFFFF, #CCCCCC]" verticalScrollPolicy="auto" width="250" height="180" fontSize="10">
+		<s:VGroup gap="20" width="100%" height="100%" padding="30">
+			<s:DataGrid id="dgKeys" editable="false" dataProvider="{myKeysCollection}" verticalScrollPolicy="auto" width="350" height="180" fontSize="10">
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn dataField="Desc" headerText="{Lang.Description}"/>
