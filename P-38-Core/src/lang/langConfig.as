@@ -31,6 +31,9 @@ package lang {
 		public var InfosIncorrectes:String;
 		public var Supprimer:String
 		public var Rafraichir:String;
+		public var PasImplemente:String;
+		public var EtesVousSur:String;
+		public var FactureLN:String;
 
 		public var ErrDescription:Object = new Object();
 		

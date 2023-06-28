@@ -31,6 +31,9 @@ package lang {
 			InfosIncorrectes = "Informations incorrectes";
 			Supprimer = "Supprimer";
 			Rafraichir = "Rafraichir";
+			PasImplemente = "Pas encore implémenté";
+			EtesVousSur = "Etes-vous sûr ?";
+			FactureLN = "Facture LN";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";
