@@ -176,7 +176,7 @@
 				<s:Button label="{Lang.Envoyer}" click="if(rdTypeMessage.selectedValue == 'txt') SendMsg() else SendFile();"/>
 			</s:HGroup>
 
-			<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}">
+			<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}" gap="10">
 				<s:TextArea id="txtLightning" width="300" height="200" editable="false"/>
 				<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
 			</s:HGroup>
@@ -207,40 +207,41 @@
 				</s:columns>
 			</s:DataGrid>		
 
-			<s:BorderContainer color="0x666666" borderWeight="2" cornerRadius="5" visible="{dgMsg.selectedItem != null}" backgroundAlpha="0.25" backgroundColor="#6693a8" >
+			<s:BorderContainer color="0x666666" borderWeight="2" cornerRadius="5" visible="{dgMsg.selectedItem != null}"
+				width="100%" backgroundAlpha="0.25" backgroundColor="#6693a8" >
 				<s:layout>
-					<s:VerticalLayout padding="10" gap="5" horizontalAlign="right"/>
+					<s:VerticalLayout padding="10" horizontalAlign="right"/>
 				</s:layout>
-				<s:FormItem label="{Lang.Date}">
-					<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).DateT}"/>
-				</s:FormItem>			
-				<s:HGroup gap="15">	
-					<s:FormItem label="{Lang.ID}">
-						<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).MsgID}"/>
+				<s:HGroup gap="15" width="100%">	
+					<s:FormItem label="{Lang.ID}" width="100%">
+						<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).MsgID}"/>
 					</s:FormItem>				
-					<s:FormItem label="{Lang.Token}">
-						<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).MsgToken}"/>
-					</s:FormItem>		
+					<s:FormItem label="{Lang.Cle}" width="100%">
+						<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).CryptKey}"/>
+					</s:FormItem>
 				</s:HGroup>		
-				<s:HGroup gap="15">	
-					<s:FormItem label="{Lang.FactureLN}">
-						<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).LightningInvoice}"/>
-					</s:FormItem>				
-					<s:FormItem label="{Lang.Prix}">
-						<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).mSatoshi}"/>
-					</s:FormItem>					
+				<s:FormItem label="{Lang.Token}" width="100%">
+					<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).MsgToken}"/>
+				</s:FormItem>		
+				<s:FormItem label="{Lang.FactureLN}" width="100%">
+					<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).LightningInvoice}"/>
+				</s:FormItem>				
+				<s:HGroup gap="15" width="100%">	
+					<s:FormItem label="{Lang.Date}" width="100%">
+						<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).DateT}"/>
+					</s:FormItem>			
+					<s:FormItem label="{Lang.Statut}" width="100%">
+						<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).Status}"/>
+					</s:FormItem>	
+					<s:FormItem label="{Lang.Prix}" width="100%">
+						<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).mSatoshi}"/>
+					</s:FormItem>	
 				</s:HGroup>		
-				<s:FormItem label="{Lang.ErreurMsg}">
-					<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).ErrCode + ' - ' + (dgMsg.selectedItem as Message).ErrMsg}"/>
+				<s:FormItem label="{Lang.ErreurMsg}" width="100%">
+					<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).ErrCode + ' - ' + (dgMsg.selectedItem as Message).ErrMsg}"/>
 				</s:FormItem>						
-				<s:FormItem label="{Lang.Statut}">
-					<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).Status}"/>
-				</s:FormItem>				
-				<s:FormItem label="{Lang.Cle}">
-					<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).CryptKey}"/>
-				</s:FormItem>				
-				<s:FormItem label="{Lang.Contenu}">
-					<s:TextInput width="200" editable="false" text="{(dgMsg.selectedItem as Message).Content}"/>
+				<s:FormItem label="{Lang.Contenu}" width="100%">
+					<s:TextInput width="100%" editable="false" text="{(dgMsg.selectedItem as Message).Content}"/>
 				</s:FormItem>				
 				<s:Button label="{Lang.Rafraichir}" click="RefreshMsg()"/>
 
