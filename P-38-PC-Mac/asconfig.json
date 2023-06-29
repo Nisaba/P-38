@@ -20,14 +20,14 @@
       		"libs"
       	],
           "signingOptions": {
-           /* "debug": {*/
+            "debug": {
                 "storetype": "pkcs12",
                 "keystore": "cert/nisaba3.pfx"  //password : 123456
-            /*},
+            },
             "release" : {
                 "storetype": "Windows-MY",
-                "alias": "NISABA SOLUTIONS LIMITED"*/
-           // }
+                "alias": "NISABA SOLUTIONS LIMITED"
+            }
           },
           "files": [
             {

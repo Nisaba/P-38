@@ -20,7 +20,7 @@
         import org.apache.flex.collections.VectorCollection;
         import spark.components.Alert;
         import mx.events.CloseEvent;
-        import blockstream.Message;
+
 
 		[Bindable] private var msg:Message;
 		private var myMessages:Vector.<Message>;
@@ -91,12 +91,16 @@
 
 		private function onMsgError(e:ErrorEvent):void {
 			msg.removeEventListener(Event.COMPLETE, onMsgComplete);
+			msg.removeEventListener(Event.COMPLETE, onMsgRefresh);
 			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
 			if (msg.ErrCode == 0) {
 				trace (Lang.ErreurMsg + e.text);
+				Alert.show(Lang.ErreurMsg + e.text)
 			} else {
 				trace (Lang.ErreurMsg + msg.ErrCode.toString() + " - " + Lang.ErrDescription[msg.ErrCode]);
+				Alert.show(Lang.ErreurMsg + msg.ErrCode.toString() + " - " + Lang.ErrDescription[msg.ErrCode])
 				trace (msg.ErrMsg);
+				Alert.show( msg.ErrMsg)
 			}
 		}
 
@@ -127,14 +131,22 @@
 		}
 
 		private function RefreshMsg():void {
-			myMessages[dgMsg.selectedIndex].addEventListener(Event.COMPLETE, onMsgRefresh);
-			myMessages[dgMsg.selectedIndex].Refresh();
+			msg = myMessages[dgMsg.selectedIndex];
+			msg.addEventListener(Event.COMPLETE, onMsgRefresh);
+			msg.addEventListener(ErrorEvent.ERROR, onMsgError);
+			msg.Refresh();
 
-			function onMsgRefresh():void {
-				myMessages[dgMsg.selectedIndex].removeEventListener(Event.COMPLETE, onMsgRefresh);
-				myMessagesCollection = new VectorCollection(myMessages);
-				myAppli.Messages = myMessages;
-			}
+		}
+
+		private function onMsgRefresh(e:Event):void {
+			msg.removeEventListener(Event.COMPLETE, onMsgRefresh);
+			msg.removeEventListener(ErrorEvent.ERROR, onMsgError);
+			myMessages[dgMsg.selectedIndex] = msg;
+			
+			myMessagesCollection = new VectorCollection(myMessages);
+			myAppli.Messages = myMessages;
+			msg = null;
+			Alert.show("OK");
 		}
 		
 	]]>

@@ -136,10 +136,9 @@ package blockstream
 
         public function Refresh():void {
 			var req:URLRequest = new URLRequest(URL_BASE + "order/" + MsgID);
-			var headers:Array = new Array();
+			req.contentType = "text/html; charset=UTF-8";
 			// https://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/net/URLRequestHeader.html
-			headers.push( new URLRequestHeader("X-Auth-Token", MsgToken));
-			req.requestHeaders.push(headers);
+			req.requestHeaders.push(new URLRequestHeader("X-Auth-Token", MsgToken));
 			req.method = URLRequestMethod.GET;
 
 			AddListeners();
@@ -151,6 +150,8 @@ package blockstream
         private function onRefreshComplete(e:Event):void {
             removeListeners();
 			trace (e.target.data);
+			JsonReponse = JSON.parse((e.target as URLLoader).data);
+			Status = JsonReponse.status;
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 
