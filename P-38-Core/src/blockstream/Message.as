@@ -90,7 +90,9 @@ package blockstream
 
         public function SendTxtCrypt(pMessage:String, pBid:uint, pKey:String):void {
 			CryptKey = pKey;
-			SendTxt(PrivateKey.CryptStr(pMessage, pKey), pBid);
+			var myKey:PrivateKey = new PrivateKey();
+			myKey.Key = pKey;
+			SendTxt(myKey.CryptStr(pMessage), pBid);
 			Content = pMessage;
         }
 

@@ -34,6 +34,7 @@ package lang {
 			PasImplemente = "Pas encore implémenté";
 			EtesVousSur = "Etes-vous sûr ?";
 			FactureLN = "Facture LN";
+			Decryptage = "Décryptage";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";

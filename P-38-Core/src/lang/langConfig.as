@@ -34,6 +34,7 @@ package lang {
 		public var PasImplemente:String;
 		public var EtesVousSur:String;
 		public var FactureLN:String;
+		public var Decryptage:String;
 
 		public var ErrDescription:Object = new Object();
 		

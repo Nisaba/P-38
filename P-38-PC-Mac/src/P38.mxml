@@ -148,12 +148,22 @@
 			msg = null;
 			Alert.show("OK");
 		}
+
+		private function Decrypt():void {
+			try	{
+				var myKey:PrivateKey = (cmbKeys2.selectedItem as PrivateKey);
+				txtDecrypt.text = myKey.DecryptStr(txtMess2.text);				
+			}	catch (e:Error) {
+				Alert.show(e.message);
+			}
+		}
 		
 	]]>
 </fx:Script>
 
 <fx:Declarations>
 	<s:RadioButtonGroup id="rdTypeMessage"/>
+	<s:RadioButtonGroup id="rdTypeMessage2"/>
 </fx:Declarations>
 
 <s:Image x="0" y="0" width="100%" height="100%" scaleMode="stretch"
@@ -175,7 +185,7 @@
 					<s:CheckBox id="chkSign" label="{Lang.SignerMessage}" enabled="{cmbKeys.selectedItem != null}"/>
 				</s:BorderContainer>
 				<s:Spacer width="40"/>
-				<s:Label text="https://blockstream.com/satellite-queue" fontSize="12" buttonMode="true" useHandCursor="true" click="navigateToURL( new URLRequest('https://blockstream.com/satellite-queue')); "/>
+				<mx:LinkButton label="https://blockstream.com/satellite-queue" fontSize="12" click="navigateToURL( new URLRequest('https://blockstream.com/satellite-queue')); "/>
 			</s:HGroup>
 			
 			<s:Group>
@@ -296,6 +306,30 @@
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.ParamsLN}">
 		<s:VGroup gap="20" width="100%" height="100%" padding="30">
 			<s:Label text="{Lang.PasImplemente}" fontSize="14"/>
+		</s:VGroup>		
+	</s:NavigatorContent>
+
+	<s:NavigatorContent width="100%" height="100%" label="{Lang.Decryptage}">
+		<s:VGroup gap="20" width="100%" height="100%" padding="20">
+			<s:HGroup verticalAlign="middle">
+				<s:RadioButton group="{rdTypeMessage2}" label="{Lang.Texte}" value="txt" selected="true"/>
+				<s:RadioButton group="{rdTypeMessage2}" label="{Lang.Fichier}" value="fic"/>
+				<s:Spacer width="50"/>
+				<s:BorderContainer color="0x666666" borderWeight="2" cornerRadius="5" >
+					<s:layout>
+						<s:HorizontalLayout padding="10" gap="5" verticalAlign="middle"/>
+					</s:layout>
+					<s:Label text="{Lang.Cle}"/>
+					<s:ComboBox id="cmbKeys2" dataProvider="{myKeysCollection}" labelField="Desc" restrict="|"/>
+				</s:BorderContainer>
+			</s:HGroup>
+			<s:Group>
+				<s:TextArea id="txtMess2" visible="{rdTypeMessage2.selectedValue == 'txt'}" heightInLines="8" widthInChars="40"/>
+				<s:Button  label="{Lang.SelectionFichier}" visible="{rdTypeMessage2.selectedValue == 'fic'}"/>
+			</s:Group>
+			<s:Button label="{Lang.Decryptage}" click="Decrypt()" enabled="{!(cmbKeys2.selectedItem == null || txtMess2.text == '')}"/>
+			<s:TextArea id="txtDecrypt" heightInLines="8" widthInChars="40" editable="false"
+				 visible="{!(rdTypeMessage2.selectedValue != 'txt' || cmbKeys2.selectedItem == null || txtMess2.text == '')}"/>
 		</s:VGroup>		
 	</s:NavigatorContent>
 
