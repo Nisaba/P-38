@@ -1,4 +1,4 @@
-package lang {
+package language {
 	
 
 	public class langEN extends langConfig {

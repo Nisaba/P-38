@@ -14,27 +14,47 @@ package blockstream
         public var Desc:String;
         public var Key:String;
 
+        private var Pad:IPad;
+        private var Mode:ICipher;
+
         public function CryptStr(pStr:String):String {
-            var key:String = Base64.encodeByteArray(Hex.toArray(Key));
-            var kdata:ByteArray = Base64.decodeToByteArray(key); 
+            PreparePadAndMode();
             var data:ByteArray=  Hex.toArray(Hex.fromString(pStr));				
-            var pad:IPad = new NullPad;
-            var mode:ICipher = Crypto.getCipher("simple-aes", kdata, pad);
-            pad.setBlockSize(mode.getBlockSize());
-            mode.encrypt(data);
+
+            Mode.encrypt(data);
             return Base64.encodeByteArray(data);
         }
 
         public function DecryptStr(pCryptStr:String):String {
-            var key:String = Base64.encodeByteArray(Hex.toArray(Key));
-            var kdata:ByteArray = Base64.decodeToByteArray(key);
+            PreparePadAndMode();
             var data:ByteArray = Base64.decodeToByteArray(pCryptStr);
-            var pad:IPad = new NullPad;
-            var mode:ICipher = Crypto.getCipher("simple-aes", kdata, pad);
-            pad.setBlockSize(mode.getBlockSize());
-            mode.decrypt(data);
-            
+
+            Mode.decrypt(data);           
             return Hex.toString(Hex.fromArray(data));
+        }
+
+
+        public function CryptBytes(pBytes:ByteArray):void {
+            PreparePadAndMode();
+            
+            Mode.encrypt(pBytes);
+        }
+
+        public function DecryptBytes(pCryptBytes:ByteArray):void {
+            PreparePadAndMode();
+
+            Mode.decrypt(pCryptBytes);           
+        }
+
+
+        private function get KeyData():ByteArray {
+            return Base64.decodeToByteArray(Base64.encodeByteArray(Hex.toArray(Key)));
+        }
+
+        private function PreparePadAndMode():void {
+            var Pad = new NullPad;
+            Mode = Crypto.getCipher("simple-aes", KeyData, Pad);
+            Pad.setBlockSize(Mode.getBlockSize());            
         }
 
     }

@@ -1,4 +1,4 @@
-package lang {
+package language {
 	
 	import blockstream.Message;
 
@@ -35,6 +35,7 @@ package lang {
 			EtesVousSur = "Etes-vous sûr ?";
 			FactureLN = "Facture LN";
 			Decryptage = "Décryptage";
+			Copier = "Copier la clé";
 
 			ErrDescription[Message.ERR_LIMIT_TOO_LARGE] = "Limite trop élevée";
  			ErrDescription[Message.ERR_BID_TOO_SMALL] = "Offre trop basse";

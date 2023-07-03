@@ -88,16 +88,14 @@ package blockstream
 
         }
 
-        public function SendTxtCrypt(pMessage:String, pBid:uint, pKey:String):void {
-			CryptKey = pKey;
-			var myKey:PrivateKey = new PrivateKey();
-			myKey.Key = pKey;
-			SendTxt(myKey.CryptStr(pMessage), pBid);
+        public function SendTxtCrypt(pMessage:String, pBid:uint, pKey:PrivateKey):void {
+			CryptKey = pKey.Key;
+			SendTxt(pKey.CryptStr(pMessage), pBid);
 			Content = pMessage;
         }
 
 
-		public function SendFile(pFile:File, pBid:int):void {
+		public function SendFile(pFile:File, pBid:int, pKey:PrivateKey = null):void {
 			Type = TYPE_MSG_FILE;	
 			Content = pFile.name;
 
@@ -106,6 +104,19 @@ package blockstream
 			var ba:ByteArray = new ByteArray();
 			fs.readBytes(ba);
 			fs.close();
+
+			if (pKey != null) {
+				CryptKey = pKey.Key;
+				pKey.CryptBytes(ba);
+
+				ba.position = 0;
+				var fs2:FileStream = new FileStream();
+				var f2:File = new File(pFile.nativePath + ".crypt");
+				fs2.open(f2, FileMode.WRITE);
+				fs2.writeBytes(ba);
+				fs2.close();
+				return;
+			}
 
 			mSatoshi = pBid * ba.length;
 			if (mSatoshi < 1000) mSatoshi = 1000;

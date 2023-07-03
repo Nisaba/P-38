@@ -14,7 +14,7 @@
 		import flash.events.Event;
 		import flash.events.ErrorEvent;
         import org.qrcode.QRCode;
-        import lang.langConfig;
+        import language.langConfig;
         import utils.myAppli;
         import blockstream.PrivateKey;
         import org.apache.flex.collections.VectorCollection;
@@ -38,6 +38,10 @@
 			myKeys = myAppli.PrivateKeys;
 			myKeysCollection = new VectorCollection(myKeys);
 			nativeWindow.maximize();
+			var appXml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+			var ns:Namespace = appXml.namespace();
+			var appVersion:String = appXml.ns::versionNumber[0];
+			this.title = myAppli.appName + ' ' + appVersion; // + " -  " + sDesc;
 		}
 
 		private function SendFile():void {
@@ -50,10 +54,13 @@
 				msg = new Message();
 				msg.addEventListener(Event.COMPLETE, onMsgComplete);
 				msg.addEventListener(ErrorEvent.ERROR, onMsgError);
-				msg.SendFile(e.currentTarget as File, nmrSatoshi.value);
+				if (chkSign.selected) {
+					var myKey:PrivateKey = (cmbKeys.selectedItem as PrivateKey);
+					msg.SendFile(e.currentTarget as File, nmrSatoshi.value, myKey);
+				} else {
+					msg.SendFile(e.currentTarget as File, nmrSatoshi.value);
+				}
 			}
-
-
 		}
 
 		private function SendMsg():void {
@@ -67,7 +74,7 @@
 			msg.addEventListener(ErrorEvent.ERROR, onMsgError);
 			if (chkSign.selected) {
 				var myKey:PrivateKey = (cmbKeys.selectedItem as PrivateKey);
-				msg.SendTxtCrypt(txtMess.text, nmrSatoshi.value, myKey.Key);
+				msg.SendTxtCrypt(txtMess.text, nmrSatoshi.value, myKey);
 			} else {
 				msg.SendTxt(txtMess.text, nmrSatoshi.value);
 			}
@@ -149,10 +156,38 @@
 			Alert.show("OK");
 		}
 
-		private function Decrypt():void {
+		private function DecryptText():void {
 			try	{
 				var myKey:PrivateKey = (cmbKeys2.selectedItem as PrivateKey);
-				txtDecrypt.text = myKey.DecryptStr(txtMess2.text);				
+					txtDecrypt.text = myKey.DecryptStr(txtMess2.text);
+			} catch (e:Error) {
+				Alert.show(e.message);
+			}
+		}
+		private function DecryptFile():void {
+			try	{
+				var myKey:PrivateKey = (cmbKeys2.selectedItem as PrivateKey);
+				var f:File = new File();
+				f.addEventListener(Event.SELECT, onDecryptFileSelect);
+				f.browseForOpen(Lang.SelectionFichier);
+
+				function onDecryptFileSelect(e:Event):void {
+					f.removeEventListener(Event.SELECT, onDecryptFileSelect);
+					var fs:FileStream = new FileStream();
+					fs.open(f, FileMode.READ);
+					var ba:ByteArray = new ByteArray();
+					fs.readBytes(ba);
+					fs.close();
+
+					myKey.DecryptBytes(ba);
+					ba.position = 0;
+					var fs2:FileStream = new FileStream();
+					var f2:File = new File(f.nativePath + ".decrypt");
+					fs2.open(f2, FileMode.WRITE);
+					fs2.writeBytes(ba);
+					fs2.close();
+					Alert.show(Lang.Decryptage + " : " + f2.nativePath);
+				}				
 			}	catch (e:Error) {
 				Alert.show(e.message);
 			}
@@ -168,6 +203,7 @@
 
 <s:Image x="0" y="0" width="100%" height="100%" scaleMode="stretch"
 			 source="@Embed(source='img/mainP38.jpg')"/>
+
 <mx:TabNavigator id="myTab" tabStyleName="StyleTab" width="100%" height="100%" backgroundAlpha="0.0"> 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.NewMsg}">
 		<s:VGroup gap="20" width="100%" height="100%" padding="30">
@@ -188,16 +224,16 @@
 				<mx:LinkButton label="https://blockstream.com/satellite-queue" fontSize="12" click="navigateToURL( new URLRequest('https://blockstream.com/satellite-queue')); "/>
 			</s:HGroup>
 			
-			<s:Group>
-				<s:TextArea id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}" heightInLines="8" widthInChars="40"/>
-				<s:Button  label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
-			</s:Group>
+			<s:TextArea id="txtMess" visible="{rdTypeMessage.selectedValue == 'txt'}" heightInLines="8" widthInChars="40"/>
 
 			<s:HGroup verticalAlign="middle">
 				<s:Label text="mSatoshi / byte"/>
 				<s:NumericStepper id="nmrSatoshi" value="1" minimum="1"/>
 				<s:Spacer width="40"/>
-				<s:Button label="{Lang.Envoyer}" click="if(rdTypeMessage.selectedValue == 'txt') SendMsg() else SendFile();"/>
+				<s:Group>
+					<s:Button label="{Lang.Envoyer}" click="SendMsg()" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
+					<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
+				</s:Group>
 			</s:HGroup>
 
 			<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}" gap="10">
@@ -209,7 +245,7 @@
 
 	<s:NavigatorContent width="100%" height="100%" label="{Lang.MsgEnregistres}">
 		<s:VGroup gap="20" width="100%" height="100%" padding="20">
-			<s:DataGrid id="dgMsg" editable="false" dataProvider="{myMessagesCollection}" verticalScrollPolicy="auto" width="100%" height="300">
+			<s:DataGrid id="dgMsg" editable="false" dataProvider="{myMessagesCollection}" verticalScrollPolicy="auto" width="100%" height="300" fontSize="12">
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn dataField="DateT" headerText="{Lang.Date}"/>
@@ -232,9 +268,9 @@
 			</s:DataGrid>		
 
 			<s:BorderContainer color="0x666666" borderWeight="2" cornerRadius="5" visible="{dgMsg.selectedItem != null}"
-				width="100%" backgroundAlpha="0.25" backgroundColor="#6693a8" >
+				width="100%" backgroundAlpha="0.25" backgroundColor="#6693a8" fontSize="12" >
 				<s:layout>
-					<s:VerticalLayout padding="10" horizontalAlign="right"/>
+					<s:VerticalLayout padding="10" horizontalAlign="right" gap="2"/>
 				</s:layout>
 				<s:HGroup gap="15" width="100%">	
 					<s:FormItem label="{Lang.ID}" width="100%">
@@ -279,7 +315,7 @@
 
 			<s:HGroup verticalAlign="middle" gap="10">
 				<s:VGroup horizontalAlign="right" gap="20">
-					<s:DataGrid id="dgKeys" editable="false" dataProvider="{myKeysCollection}" verticalScrollPolicy="auto" width="450" height="250">
+					<s:DataGrid id="dgKeys" editable="false" dataProvider="{myKeysCollection}" verticalScrollPolicy="auto" width="450" height="200">
 						<s:columns>
 							<s:ArrayList>
 								<s:GridColumn dataField="Desc" headerText="{Lang.Description}"/>
@@ -287,7 +323,10 @@
 							</s:ArrayList>
 						</s:columns>
 					</s:DataGrid>
-					<s:Button label="{Lang.Supprimer}" click="SupprKey()" enabled="{dgKeys.selectedItem != null}"/>
+					<s:HGroup>
+						<s:Button label="{Lang.Copier}" click="System.setClipboard((dgKeys.selectedItem as PrivateKey).Key);" enabled="{dgKeys.selectedItem != null}"/>
+						<s:Button label="{Lang.Supprimer}" click="SupprKey()" enabled="{dgKeys.selectedItem != null}"/>
+					</s:HGroup>
 				</s:VGroup>
 				<s:Spacer width="15"/>
 				<s:VGroup horizontalAlign="right">
@@ -325,14 +364,15 @@
 			</s:HGroup>
 			<s:Group>
 				<s:TextArea id="txtMess2" visible="{rdTypeMessage2.selectedValue == 'txt'}" heightInLines="8" widthInChars="40"/>
-				<s:Button  label="{Lang.SelectionFichier}" visible="{rdTypeMessage2.selectedValue == 'fic'}"/>
+				<s:Button  label="{Lang.SelectionFichier}" visible="{rdTypeMessage2.selectedValue == 'fic'}"  enabled="{cmbKeys2.selectedItem != null}" click="DecryptFile()"/>
 			</s:Group>
-			<s:Button label="{Lang.Decryptage}" click="Decrypt()" enabled="{!(cmbKeys2.selectedItem == null || txtMess2.text == '')}"/>
+			<s:Button label="{Lang.Decryptage}" click="DecryptText()" visible="{rdTypeMessage2.selectedValue == 'txt'}" enabled="{!(cmbKeys2.selectedItem == null || txtMess2.text == '')}"/>
 			<s:TextArea id="txtDecrypt" heightInLines="8" widthInChars="40" editable="false"
 				 visible="{!(rdTypeMessage2.selectedValue != 'txt' || cmbKeys2.selectedItem == null || txtMess2.text == '')}"/>
 		</s:VGroup>		
 	</s:NavigatorContent>
 
 </mx:TabNavigator>
+
 
 </s:WindowedApplication>

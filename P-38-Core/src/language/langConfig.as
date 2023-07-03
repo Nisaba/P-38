@@ -1,4 +1,4 @@
-package lang {
+package language {
 
 	import flash.system.Capabilities;
 	//import com.distriqt.extension.gyroscope.Gyroscope;
@@ -35,6 +35,7 @@ package lang {
 		public var EtesVousSur:String;
 		public var FactureLN:String;
 		public var Decryptage:String;
+		public var Copier:String;
 
 		public var ErrDescription:Object = new Object();
 		
