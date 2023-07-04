@@ -2,9 +2,9 @@
 Use Lightning Network to send satellite messages with Blockstream
 
 ### What is it ?
-For several years, BlockStream has been offering an infrastructure for synchronizing a bitcoin node via satellite, independent of the internet. But also to send messages and files by satellite by paying only a few satoshis by the Lightning Network. These messages can be received through specialized antennas, which means that it is possible to send messages or documents to specially equipped recipients who are deprived of the internet...
+For several years, BlockStream has been offering an infrastructure for synchronizing a bitcoin node via satellite, independent of the internet. But also to send messages and files by satellite by paying only a few satoshis by the Lightning Network (https://blockstream.com/satellite-queue/). These messages can be received through specialized antennas, which means that it is possible to send messages or documents to specially equipped recipients who are deprived of the internet...
 
-P-38 is an application that manages the sending of these messages. Basically, this application does nothing more than the dedicated API offered by Blockstream. But it makes it easier to manage this activity.
+P-38 is an application that manages the sending of these messages. Basically, this application does nothing more than the web app offered  by Blockstream. But it makes it easier to manage this activity using the dedicated API (https://blockstream.com/satellite-api-documentation/).
 
 ### Installation
 P-38 was designed under the **Adobe Air** cross-platform framework (taken over by Harman, a Samsung group company). The application works on **Windows PC** and **Macintosh**. A mobile version (Android and Apple) will be offered later.
