@@ -26,7 +26,7 @@ P-38 has the following features:
 - Storage of messages with detail display and possible status refresh
 - Ability to decrypt messages or files received by satellite
 
-![image](https://github.com/Nisaba/P-38/assets/34550856/74d53d4c-da1f-4a5e-9b57-37b3325d9576)
+![Capture-P38](https://github.com/Nisaba/P-38/assets/34550856/d5956b9e-1595-4f78-a945-a94c5643a73b)
 
 
 Currently the following languages are available: French, English, Italian, Spanish, Portuguese, German, Estonian, Ukrainian, Russian, If you want other languages, please ask.
