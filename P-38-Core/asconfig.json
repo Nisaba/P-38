@@ -1,6 +1,7 @@
 {
 	"config": "air",
 	"type": "lib",
+	"application": "src/P-38-Core-app.xml",
 	"compilerOptions": {
 		"source-path": [
 			"src"

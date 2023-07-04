@@ -48,7 +48,7 @@ package language {
 				case "fr":
 					return new langFR()
 					break;
-				/*case "de":
+				case "de":
 					return new langDE()
 					break;
 				case "ee":
@@ -68,7 +68,7 @@ package language {
 					break;
 				case "ua":
 					return new langUA()
-					break;*/
+					break;
 				default:
 					return new langEN();
 			}

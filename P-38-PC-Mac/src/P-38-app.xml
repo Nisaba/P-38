@@ -32,6 +32,11 @@
 	<description>
 		<text xml:lang="fr">Utilisez Lightning Network pour envoyer des messages par satellite grâce à Blockstream</text>
 		<text xml:lang="en">Use Lightning Network to send satellite messages with Blockstream</text>
+		<text xml:lang="de">Verwenden Sie das Lightning-Netzwerk, um Nachrichten über Satellit mit Hilfe von Blockstream zu senden</text>
+		<text xml:lang="ee">Kasutage Lightning Networki satelliiditeenuste saatmiseks Blockstreami abil</text>
+		<text xml:lang="es">Utiliza Lightning Network para enviar mensajes por satélite gracias a Blockstream</text>
+		<text xml:lang="it">Utilizza Lightning Network per inviare messaggi via satellite grazie a Blockstream</text>
+		<text xml:lang="pt">Utilize a Lightning Network para enviar mensagens via satélite através da Blockstream</text>
 	</description>
 
 
