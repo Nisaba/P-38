@@ -1,20 +1,22 @@
 # P-38
 Use Lightning Network to send satellite messages with Blockstream
 
+### What is it ?
 For several years, BlockStream has been offering an infrastructure for synchronizing a bitcoin node via satellite, independent of the internet. But also to send messages and files by satellite by paying only a few satoshis by the Lightning Network. These messages can be received through specialized antennas, which means that it is possible to send messages or documents to specially equipped recipients who are deprived of the internet...
 
 P-38 is an application that manages the sending of these messages. Basically, this application does nothing more than the dedicated API offered by Blockstream. But it makes it easier to manage this activity.
 
+### Installation
 P-38 was designed under the **Adobe Air** cross-platform framework (taken over by Harman, a Samsung group company). The application works on **Windows PC** and **Macintosh**. A mobile version (Android and Apple) will be offered later.
 
-To install the application, simply download and install the AIR runtime version 50.2 minimum at this address:
+To install the application, simply download and install the AIR runtime version 50.2 minimum at this address:<br />
 https://airsdk.harman.com/runtime
 
-Then install the P-38 application by downloading and running this air file:
-https://github.com/Nisaba/P-38/releases/download/initial-release1/P-38.air
+Then install the P-38 application by downloading and running this air file:<br />
+https://github.com/Nisaba/P-38/releases/download/initial-release1/P-38.air<br />
 (this air file was generated with a valid production certificate)
 
-
+### Features
 P-38 has the following features:
 
 - Sending Text or File messages, unencrypted or encrypted
