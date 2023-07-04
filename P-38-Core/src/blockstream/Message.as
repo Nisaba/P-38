@@ -53,7 +53,7 @@ package blockstream
         public var JsonReponse:Object;
 		public var MsgID:String;
 		public var MsgToken:String;
-		public var LightningInvoice:String;
+		[Bindable] public var LightningInvoice:String;
 		public var mSatoshi:uint;
 		public var ErrMsg:String;
 		public var ErrCode:int;

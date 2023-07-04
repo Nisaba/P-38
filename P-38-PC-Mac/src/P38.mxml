@@ -237,7 +237,7 @@
 			</s:HGroup>
 
 			<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}" gap="10">
-				<s:TextArea id="txtLightning" width="300" height="200" editable="false"/>
+				<s:TextArea id="txtLightning" width="310" height="240" editable="false"/>
 				<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
 			</s:HGroup>
 		</s:VGroup>
