@@ -29,4 +29,5 @@ P-38 has the following features:
 ![Capture-P38](https://github.com/Nisaba/P-38/assets/34550856/d5956b9e-1595-4f78-a945-a94c5643a73b)
 
 
-Currently the following languages are available: French, English, Italian, Spanish, Portuguese, German, Estonian, Ukrainian, Russian, If you want other languages, please ask.
+
+Currently the following languages are available: French, English, Italian, Spanish, Portuguese, German, Estonian, Ukrainian, Russian. If you want other languages, please ask.
