@@ -16,6 +16,10 @@ Then install the P-38 application by downloading and running this air file:<br /
 https://github.com/Nisaba/P-38/releases/download/initial-release1/P-38.air<br />
 (this air file was generated with a valid production certificate)
 
+For Windows users who do not want to install the Air runtime, they can unzip the following zip file and run the exe file there:<br />
+https://github.com/Nisaba/P-38/releases/download/initial-release1/P-38-exe-win.zip
+
+
 ### Features
 P-38 has the following features:
 
