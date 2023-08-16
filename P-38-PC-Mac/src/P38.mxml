@@ -89,6 +89,7 @@
 			var qr:QRCode = new QRCode();
 			qr.encode(msg.LightningInvoice);
 			spriteQrCode.addChild(new Bitmap(qr.bitmapData));  	
+			grpLightning.visible = true;
 
 			myMessages.push(msg);
 			myMessagesCollection = new VectorCollection(myMessages);
@@ -233,13 +234,18 @@
 				<s:Group>
 					<s:Button label="{Lang.Envoyer}" click="SendMsg()" visible="{rdTypeMessage.selectedValue == 'txt'}"/>
 					<s:Button label="{Lang.SelectionFichier}" click="SendFile()" visible="{rdTypeMessage.selectedValue == 'fic'}"/>
+					
 				</s:Group>
 			</s:HGroup>
 
-			<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}" gap="10">
-				<s:TextArea id="txtLightning" width="310" height="240" editable="false"/>
-				<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
-			</s:HGroup>
+			<!--<s:HGroup visible="{!(msg == null || msg.LightningInvoice.length == 0)}" gap="10"> -->
+			<s:VGroup id="grpLightning" gap="10" visible="false">
+				<s:Label text="{Lang.FactureLN + ' :'}" fontWeight="bold"/>
+				<s:HGroup>
+					<s:TextArea id="txtLightning" width="310" height="240" editable="false"/>
+					<s:SpriteVisualElement id="spriteQrCode" width="250" height="250"/>
+				</s:HGroup>
+			</s:VGroup>
 		</s:VGroup>
 	</s:NavigatorContent>
 
